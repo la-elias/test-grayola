@@ -17,7 +17,11 @@ import {
 import { Logo } from '../ui/icons'
 import SignOut from './sign-out'
 
-export function HeaderDashboard() {
+interface HeaderDashboardProps {
+  avatarUrl: string
+}
+
+export function HeaderDashboard({avatarUrl}: HeaderDashboardProps) {
   return (
     <div>
       <header
@@ -35,7 +39,7 @@ export function HeaderDashboard() {
             >
               <Avatar>
                 <AvatarImage
-                  src="https://github.com/shadcn.png"
+                  src={avatarUrl}
                   alt="@shadcn"
                 />
                 <AvatarFallback>CN</AvatarFallback>

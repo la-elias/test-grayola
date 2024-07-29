@@ -61,6 +61,7 @@ module.exports = {
     "@typescript-eslint/no-confusing-void-expression": 0,
     "@typescript-eslint/no-non-null-assertion": 0,
     "@typescript-eslint/no-unsafe-argument": 0,
-    "@typescript-eslint/consistent-type-imports": 0
+    "@typescript-eslint/consistent-type-imports": 0,
+    "@typescript-eslint/no-misused-promises": 0
   }
 }

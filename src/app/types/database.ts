@@ -11,19 +11,22 @@ export type Database = {
     Tables: {
       files_project: {
         Row: {
-          id: number
+          id: string
+          name: string
           project_id: string
           uploaded_at: string
           url_file: string | null
         }
         Insert: {
-          id?: number
+          id?: string
+          name: string
           project_id?: string
           uploaded_at?: string
           url_file?: string | null
         }
         Update: {
-          id?: number
+          id?: string
+          name?: string
           project_id?: string
           uploaded_at?: string
           url_file?: string | null
@@ -76,26 +79,32 @@ export type Database = {
       }
       projects: {
         Row: {
+          amount: number | null
           client_id: string
           created_at: string
           description: string
           id: string
+          state: Database["public"]["Enums"]["state"]
           title: string
           updated_at: string
         }
         Insert: {
+          amount?: number | null
           client_id?: string
           created_at?: string
           description: string
           id?: string
+          state?: Database["public"]["Enums"]["state"]
           title: string
           updated_at?: string
         }
         Update: {
+          amount?: number | null
           client_id?: string
           created_at?: string
           description?: string
           id?: string
+          state?: Database["public"]["Enums"]["state"]
           title?: string
           updated_at?: string
         }
@@ -111,28 +120,31 @@ export type Database = {
       }
       users: {
         Row: {
+          avatar_url: string | null
           created_at: string
           email: string
           id: string
           is_staff: boolean
           name: string | null
-          role: string | null
+          role: Database["public"]["Enums"]["Roles"]
         }
         Insert: {
+          avatar_url?: string | null
           created_at?: string
           email: string
           id: string
           is_staff?: boolean
           name?: string | null
-          role?: string | null
+          role?: Database["public"]["Enums"]["Roles"]
         }
         Update: {
+          avatar_url?: string | null
           created_at?: string
           email?: string
           id?: string
           is_staff?: boolean
           name?: string | null
-          role?: string | null
+          role?: Database["public"]["Enums"]["Roles"]
         }
         Relationships: [
           {
@@ -152,7 +164,8 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      Roles: "project_manager" | "client" | "designer"
+      state: "in progress" | "pending" | "done" | "cancel"
     }
     CompositeTypes: {
       [_ in never]: never

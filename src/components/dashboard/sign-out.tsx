@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
 'use client'
 
 import { ExitIcon } from "@radix-ui/react-icons"
-// import { cn } from "@/lib/utils"
 import axios from "axios"
 import { useRouter } from "next/navigation"
 import { Button } from "../ui/button"

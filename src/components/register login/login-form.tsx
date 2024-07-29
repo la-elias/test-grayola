@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
 'use client'
 import { ChangeEvent, FormEvent, useState } from 'react'
 import { cn } from '@/lib/utils'
@@ -100,7 +99,10 @@ export default function LoginForm() {
     >
       <div className="absolute top-5 left-5">
         <button
-          onClick={() => window.history.back()}
+          onClick={() => {
+            router.back()
+            router.refresh()
+          }}
           className="flex items-center justify-center p-2 rounded-full
             hover:bg-gray-200 dark:hover:bg-gray-800"
         >
