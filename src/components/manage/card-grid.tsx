@@ -18,22 +18,25 @@ interface TaskGridProps {
   assignees: Array<
     Database['public']['Tables']['users']['Row']
   >
-  userId: string
 }
 
 export default function TaskGrid({
   projects,
   assignees,
-  userId
 }: TaskGridProps) {
+  const sortedProjects = [...projects].sort((a, b) => {
+    const dateA = new Date(a.updated_at).getTime();
+    const dateB = new Date(b.updated_at).getTime();
+    return dateB - dateA; // Descending order
+  });
+
   return (
     <div className="grid grid-cols-1 gap-4">
-      {projects.map((project) => (
+      {sortedProjects.map((project) => (
         <TaskCard
           key={project.id}
           project={project}
           assignees={assignees}
-          userId={userId}
         />
       ))}
     </div>

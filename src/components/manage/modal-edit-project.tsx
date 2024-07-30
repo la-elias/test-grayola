@@ -22,7 +22,6 @@ import {
 import Link from 'next/link'
 
 interface ModalEditProjectProps {
-  userId: string
   project: Database['public']['Tables']['projects']['Row']
 }
 
@@ -83,8 +82,20 @@ const FileItem = ({
   )
 }
 
+const FilePlaceholder = () => (
+  <div
+    className="flex items-center justify-between p-2 bg-muted/50 rounded-md
+      animate-pulse"
+  >
+    <div className="flex items-center space-x-2">
+      <div className="h-4 w-4 bg-muted/70 rounded"></div>
+      <div className="h-4 w-24 bg-muted/70 rounded"></div>
+    </div>
+    <div className="h-4 w-4 bg-muted/70 rounded"></div>
+  </div>
+)
+
 export default function ModalEditProject({
-  userId,
   project
 }: ModalEditProjectProps) {
   const [title, setTitle] = useState<string>(project.title)
@@ -102,16 +113,21 @@ export default function ModalEditProject({
       url_file: string | null
     }>
   >([])
+  const [nFiles, setNFiles] = useState<number>(
+    project.n_files
+  )
   const router = useRouter()
 
-  async function handleGetFiles() {
+  const handleGetFiles = useCallback(async () => {
     try {
       const files = await getProjectFiles(project.id)
       setExistingFiles(files)
     } catch (error) {
       console.error(error)
+    } finally {
+      setNFiles(0) // Remove placeholders once files are fetched
     }
-  }
+  }, [project.id])
 
   const handleDeleteFile = async (
     fileId: string,
@@ -125,6 +141,9 @@ export default function ModalEditProject({
       )
     } catch (error) {
       console.error(error)
+    } finally {
+      setNFiles((prevNFiles) => prevNFiles - 1)
+      router.refresh()
     }
   }
 
@@ -156,14 +175,15 @@ export default function ModalEditProject({
       if (isSubmitting) return
       setIsSubmitting(true)
 
+      const date = new Date().toISOString()
       const formData = new FormData()
       formData.append('title', title)
       formData.append('description', description)
       files.forEach((file) => {
         formData.append('file', file)
       })
-      formData.append('userId', userId)
       formData.append('projectId', project.id)
+      formData.append('updated_at', date)
 
       try {
         const response = await editProject(formData)
@@ -172,27 +192,40 @@ export default function ModalEditProject({
           setDescription('')
           setFiles([])
           setIsOpen(false)
-          router.refresh()
         }
       } catch (error) {
         console.error('Error creating project:', error)
       } finally {
         setIsSubmitting(false)
+        router.refresh()
       }
     },
     [
       title,
       description,
       files,
-      userId,
       isSubmitting,
       project.id,
       router
     ]
   )
+  const handleDialogOpenChange = useCallback(
+    (open: boolean) => {
+      setIsOpen(open)
+      if (open) {
+        setTitle(project.title)
+        setDescription(project.description)
+        setNFiles(project.n_files)
+      }
+    },
+    [project.title, project.description, project.n_files]
+  )
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={handleDialogOpenChange}
+    >
       <DialogTrigger asChild>
         <Button
           size="icon"
@@ -236,14 +269,20 @@ export default function ModalEditProject({
             />
           </div>
           <div className="space-y-2">
-            {existingFiles.map((file) => (
-              <FileItem
-                key={file.id}
-                file={file}
-                projectId={project.id}
-                onDelete={handleDeleteFile}
-              />
-            ))}
+            {nFiles > 0
+              ? Array.from({ length: nFiles }).map(
+                  (_, index) => (
+                    <FilePlaceholder key={index} />
+                  )
+                )
+              : existingFiles.map((file) => (
+                  <FileItem
+                    key={file.id}
+                    file={file}
+                    projectId={project.id}
+                    onDelete={handleDeleteFile}
+                  />
+                ))}
           </div>
           <div className="space-y-1">
             <Label htmlFor="file">Archivos</Label>

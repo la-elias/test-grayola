@@ -7,7 +7,7 @@ import { type Database } from '../types/database'
 export default async function DashboardPage() {
   const user = await getUser()
 
-  let avatar = "https://github.com/shadcn.png"
+  let avatar = ""
   let projects = [] as Array<Database["public"]["Tables"]["projects"]["Row"]>
 
   if (user) {

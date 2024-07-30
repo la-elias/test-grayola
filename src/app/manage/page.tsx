@@ -10,7 +10,7 @@ import TaskGrid from '@/components/manage/card-grid'
 
 export default async function ManagePage() {
   const user = await getUser()
-  let avatar = 'https://github.com/shadcn.png'
+  let avatar = ''
   let projects = [] as Array<
     Database['public']['Tables']['projects']['Row'] & {
       project_assignments: Array<{
@@ -46,7 +46,6 @@ export default async function ManagePage() {
           <TaskGrid
             projects={projects}
             assignees={designers}
-            userId={user.id}
           />
         )}
       </div>

@@ -50,7 +50,7 @@ export default function LoginForm() {
         redirectTo: `${window.location.origin}/auth/callback`
       }
     })
-    if (error) console.log(error)
+    if (error) console.error(error)
   }
 
   const handleSubmit = async (

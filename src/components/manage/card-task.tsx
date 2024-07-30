@@ -48,13 +48,11 @@ interface TaskCardProps {
   assignees: Array<
     Database['public']['Tables']['users']['Row']
   >
-  userId: string
 }
 
 export default function TaskCard({
   project,
-  assignees,
-  userId
+  assignees
 }: TaskCardProps) {
   const [selectedAssignees, setSelectedAssignees] =
     useState(
@@ -93,7 +91,6 @@ export default function TaskCard({
   async function handleSaveAssignees() {
     setIsSaving(true)
     try {
-      // Your save logic here
       await assignDesigner(project.id, selectedAssignees)
       router.refresh()
     } finally {
@@ -123,19 +120,7 @@ export default function TaskCard({
             >
               {project.state}
             </Badge>
-            <ModalEditProject userId={userId} project={project} />
-            {/* {<Button
-              size="icon"
-              variant="ghost"
-              className="rounded-md bg-muted p-2 hover:bg-muted/50"
-              onClick={async (e) => {
-                e.preventDefault()
-                await handleGetFiles()
-              }}
-            >
-              <FilePenIcon className="h-4 w-4" />
-              <span className="sr-only">Edit</span>
-            </Button> } */}
+            <ModalEditProject project={project} />
             <Button
               size="icon"
               variant="ghost"

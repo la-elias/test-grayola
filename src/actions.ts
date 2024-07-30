@@ -3,6 +3,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { cookies } from 'next/headers'
 import { generateUUID } from './lib/utils'
+import { Database } from './app/types/database'
 // import { createClientServer } from './lib/supabase/server-function'
 
 export async function getUser() {
@@ -377,14 +378,13 @@ export async function editProject(
   const projectId = formData.get('projectId') as string
   const title = formData.get('title') as string
   const description = formData.get('description') as string
-  const userId = formData.get('userId') as string
   const files = formData.getAll('file') as File[]
+  const updatedAt = formData.get('updated_at') as string
 
-  console.log(userId, files)
   const { error } = await supabase
-    .from('projects')
-    .update({ title, description })
-    .eq('id', projectId)
+      .from('projects')
+      .update({ title, description, updated_at: updatedAt })
+      .eq('id', projectId)
   if (error) {
     console.error('Error updating project:', error.message)
     throw new Error(
@@ -392,61 +392,107 @@ export async function editProject(
     )
   }
 
-  // // If the user want to add a file
-  // if (files.length > 0) {
-  //   const storage = supabase.storage.from('projects')
-  //   for (const file of files) {
-  //     const fileId = generateUUID()
-  //     const { data: link, error: errorStorage } =
-  //       await storage.upload(
-  //         `public/${userId}/${projectId}/${fileId}`,
-  //         file
-  //       )
-  //     if (errorStorage) {
-  //       console.error(
-  //         'Error uploading file:',
-  //         errorStorage.message
-  //       )
-  //       throw new Error(
-  //         errorStorage?.message || 'Error uploading file'
-  //       )
-  //     }
-  //     const expiresIn = 60 * 60 * 24 * 30 // 30 days
-  //     const { data: signedURL, error } =
-  //       await storage.createSignedUrl(link.path, expiresIn)
+  // If the PM want to add a file
+  if(files.length > 0) {
+    // get the user ID
+    const { data: user } = await supabase
+      .from('projects')
+      .select('client_id')
+      .eq('id', projectId)
+      .single()
+    
+    const userId = user?.client_id
 
-  //     if (error) {
-  //       console.error(
-  //         'Error creating signed URL:',
-  //         error.message
-  //       )
-  //       throw new Error(
-  //         error?.message || 'Error creating signed URL'
-  //       )
-  //     }
+    // insert the new files
+    const storage = supabase.storage.from('projects')
+    for (const file of files) {
+      const fileId = generateUUID()
+      const fileName = file.name.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9]/g, '_')
 
-  //     const { error: errorInsert } = await supabase
-  //       .from('files_project')
-  //       .insert([
-  //         {
-  //           id: fileId,
-  //           project_id: projectId,
-  //           name: file.name,
-  //           url_file: signedURL.signedUrl
-  //         }
-  //       ])
-  //     if (errorInsert) {
-  //       console.error(
-  //         'Error inserting file:',
-  //         errorInsert.message
-  //       )
-  //       throw new Error(
-  //         errorInsert?.message || 'Error inserting file'
-  //       )
-  //     }
-  //   }
-  // }
+      const { data: link, error: errorStorage } =
+        await storage.upload(
+          `public/${userId}/${projectId}/${fileId}/${fileName}`,
+          file
+        )
+      if (errorStorage) {
+        console.error(
+          'Error uploading file:',
+          errorStorage.message
+        )
+        throw new Error(
+          errorStorage?.message || 'Error uploading file'
+        )
+      }
+      const expiresIn = 60 * 60 * 24 * 30 // 30 days
+      const { data: signedURL, error } =
+        await storage.createSignedUrl(link.path, expiresIn)
+
+      if (error) {
+        console.error(
+          'Error creating signed URL:',
+          error.message
+        )
+        throw new Error(
+          error?.message || 'Error creating signed URL'
+        )
+      }
+
+      const { error: errorInsert } = await supabase
+        .from('files_project')
+        .insert([
+          {
+            id: fileId,
+            project_id: projectId,
+            name: fileName,
+            url_file: signedURL.signedUrl
+          }
+        ])
+      if (errorInsert) {
+        console.error(
+          'Error inserting file:',
+          errorInsert.message
+        )
+        throw new Error(
+          errorInsert?.message || 'Error inserting file'
+        )
+      }
+    }
+  }
 
   return true
 }
 
+export async function getDesignerProjects(designerId: string) {
+  const cookieStore = cookies()
+  const supabase = createClient(cookieStore)
+  const { data, error } = await supabase
+    .from('project_assignments')
+    .select('project_id, assigned_at, projects(*)')
+    .eq('designer_id', designerId)
+  if (error) {
+    console.error('Error getting designer projects:', error.message)
+    throw new Error(
+      error?.message || 'Error getting designer projects'
+    )
+  }
+  return data
+}
+
+export async function updateProjectState(
+  projectId: string,
+  newState: Database['public']['Enums']['state']
+) {
+  const cookieStore = cookies()
+  const supabase = createClient(cookieStore)
+  const { error } = await supabase
+    .from('projects')
+    .update({ state: newState })
+    .eq('id', projectId)
+  if (error) {
+    console.error('Error updating project state:', error.message)
+    throw new Error(
+      error?.message || 'Error updating project state'
+    )
+  }
+  return true
+}
