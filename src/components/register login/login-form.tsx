@@ -47,7 +47,7 @@ export default function LoginForm() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: `https://test-grayola.vercel.app/auth/callback`
+        redirectTo: `${window.location.origin}/auth/callback`
       }
     })
     if (error) console.error(error)

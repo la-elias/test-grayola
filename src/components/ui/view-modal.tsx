@@ -34,7 +34,7 @@ const FileItem = ({ file }: FileItemProps) => {
         <Link
           href={file.url_file ?? '#'}
           target="_blank"
-          className="truncate hover:underline line-clamp-1 break-all"
+          className="truncate hover:underline max-w-[200px] lg:max-w-[400px]"
         >
           {file.name}{' '}
         </Link>
