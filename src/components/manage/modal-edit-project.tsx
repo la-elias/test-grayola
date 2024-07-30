@@ -60,7 +60,7 @@ const FileItem = ({
         <Link
           href={file.url_file ?? '#'}
           target="_blank"
-          className="truncate hover:underline max-w-[200px] lg:max-w-[400px]"
+          className="truncate hover:underline max-w-[200px]"
         >
           {file.name}{' '}
         </Link>
