@@ -34,7 +34,7 @@ const FileItem = ({ file }: FileItemProps) => {
         <Link
           href={file.url_file ?? '#'}
           target="_blank"
-          className="truncate hover:underline"
+          className="truncate hover:underline line-clamp-1 break-all"
         >
           {file.name}{' '}
         </Link>
@@ -123,14 +123,14 @@ export default function ModalViewProject({
             <Label htmlFor="title">Título</Label>
             <div
               id="title"
-              className="bg-muted/50 p-2 rounded-md"
+              className="bg-muted/50 p-2 rounded-md break-all"
             >
               {title}
             </div>
           </div>
           <div className="space-y-1">
             <Label htmlFor="description">Descripción</Label>
-            <div id="description" className="bg-muted/50 p-2 rounded-md">
+            <div id="description" className="bg-muted/50 p-2 rounded-md break-all">
               {description}
             </div>
           </div>
