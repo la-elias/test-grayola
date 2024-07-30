@@ -84,7 +84,7 @@ export default function RegisterForm() {
         formData
       )
       if (response.status === 200) {
-        router.push('/dashboard')
+        router.push('/')
       }
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {

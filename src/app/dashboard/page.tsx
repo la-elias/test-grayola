@@ -2,12 +2,13 @@ import { HeaderDashboard } from '@/components/dashboard/header-dashboard'
 import ModalNewProject from '@/components/dashboard/modal-new-project'
 import { getUser, avatarUrl, getProjects} from '@/actions'
 import OrdersGrid from '@/components/dashboard/orders-client'
+import { type Database } from '../types/database'
 
 export default async function DashboardPage() {
   const user = await getUser()
 
-  let avatar = 'https://github.com/shadcn.png'
-  let projects = []
+  let avatar = "https://github.com/shadcn.png"
+  let projects = [] as Array<Database["public"]["Tables"]["projects"]["Row"]>
 
   if (user) {
     avatar = await avatarUrl(user.id)

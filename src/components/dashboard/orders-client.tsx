@@ -1,7 +1,8 @@
 import OrderCard from "./order-card"
+import { type Database } from "@/app/types/database"
 
 interface OrdersGridProps {
-    projects: any[]
+    projects: Array<Database["public"]["Tables"]["projects"]["Row"]>
 }
 
 export default function OrdersGrid({ projects }: OrdersGridProps) {

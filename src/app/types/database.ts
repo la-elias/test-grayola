@@ -44,19 +44,19 @@ export type Database = {
       project_assignments: {
         Row: {
           assigned_at: string
-          designer_id: string | null
+          designer_id: string
           id: string
           project_id: string
         }
         Insert: {
           assigned_at?: string
-          designer_id?: string | null
+          designer_id?: string
           id?: string
           project_id?: string
         }
         Update: {
           assigned_at?: string
-          designer_id?: string | null
+          designer_id?: string
           id?: string
           project_id?: string
         }
@@ -84,6 +84,7 @@ export type Database = {
           created_at: string
           description: string
           id: string
+          n_files: number
           state: Database["public"]["Enums"]["state"]
           title: string
           updated_at: string
@@ -94,6 +95,7 @@ export type Database = {
           created_at?: string
           description: string
           id?: string
+          n_files?: number
           state?: Database["public"]["Enums"]["state"]
           title: string
           updated_at?: string
@@ -104,6 +106,7 @@ export type Database = {
           created_at?: string
           description?: string
           id?: string
+          n_files?: number
           state?: Database["public"]["Enums"]["state"]
           title?: string
           updated_at?: string
@@ -161,7 +164,12 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_role: {
+        Args: {
+          userid: string
+        }
+        Returns: string
+      }
     }
     Enums: {
       Roles: "project_manager" | "client" | "designer"

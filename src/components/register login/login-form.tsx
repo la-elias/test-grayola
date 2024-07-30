@@ -67,7 +67,7 @@ export default function LoginForm() {
     try {
       const data = await axios.post('/auth/login', formData)
       if (data.status === 200) {
-        router.push('/dashboard')
+        router.push('/')
       }
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
