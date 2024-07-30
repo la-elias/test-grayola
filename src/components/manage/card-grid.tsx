@@ -31,7 +31,7 @@ export default function TaskGrid({
   });
 
   return (
-    <div className="grid grid-cols-1 gap-4">
+    <div className="grid grid-cols-1 gap-4 grow">
       {sortedProjects.map((project) => (
         <TaskCard
           key={project.id}

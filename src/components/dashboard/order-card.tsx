@@ -1,7 +1,7 @@
-import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { type Database } from '@/app/types/database'
+import ModalViewProject from '../ui/view-modal'
 
 interface OrderCardProps {
   projects: Database['public']['Tables']['projects']['Row']
@@ -38,12 +38,10 @@ export default function OrderCard({
           ).toLocaleDateString()}
         </div>
         <div className="flex items-center justify-between">
-          <div className="text-primary font-medium">
+          <div className="text-primary font-medium align-middle mt-7">
             {projects.amount ? `${projects.amount.toFixed(2)}` : 'N/A'}
           </div>
-          <Button variant="outline" size="sm">
-            View Order
-          </Button>
+          <ModalViewProject project={projects} />
         </div>
       </CardContent>
     </Card>

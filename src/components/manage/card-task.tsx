@@ -32,6 +32,7 @@ import {
 } from '@/actions'
 import { useRouter } from 'next/navigation'
 import ModalEditProject from './modal-edit-project'
+import ModalViewProject from '../ui/view-modal'
 
 interface TaskCardProps {
   project: Database['public']['Tables']['projects']['Row'] & {
@@ -238,9 +239,7 @@ export default function TaskCard({
               </p>
             </div>
           </div>
-          <Button variant="outline" size="sm">
-            View Order
-          </Button>
+          <ModalViewProject project={project} />
         </div>
         <div className="mt-7 flex items-center gap-2">
           <PaperclipIcon className="h-5 w-5 text-muted-foreground" />

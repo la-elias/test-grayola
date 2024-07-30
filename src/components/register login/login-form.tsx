@@ -47,7 +47,7 @@ export default function LoginForm() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`
+        redirectTo: `https://test-grayola.vercel.app/auth/callback`
       }
     })
     if (error) console.error(error)
@@ -100,8 +100,7 @@ export default function LoginForm() {
       <div className="absolute top-5 left-5">
         <button
           onClick={() => {
-            router.back()
-            router.refresh()
+            router.push('/')
           }}
           className="flex items-center justify-center p-2 rounded-full
             hover:bg-gray-200 dark:hover:bg-gray-800"

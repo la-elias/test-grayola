@@ -6,7 +6,8 @@ import {
 import { Draggable } from 'react-beautiful-dnd'
 import { type Database } from '@/app/types/database'
 import { PaperclipIcon } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+// import { Button } from '@/components/ui/button'
+import ModalViewProject from '../ui/view-modal'
 
 interface ProjectItemProps {
   project:
@@ -40,11 +41,12 @@ const ProjectItem = ({
               <p className="break-all">
                 {project.description}
               </p>
-              <div className="mt-7 flex items-center gap-2">
+              {/* <div className="mt-7 flex items-center gap-2">
                 <Button variant="default" size="sm">
                   View Order
                 </Button>
-              </div>
+              </div> */}
+              <ModalViewProject project={project} />
               <div className="mt-7 flex items-center gap-2">
                 <PaperclipIcon className="h-5 w-5 text-muted-foreground" />
                 <p className="text-sm text-muted-foreground break-words">
